@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flood Risk Prediction</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="text-center">Flood Risk Prediction</h2>
+        <p class="text-center">Enter the data below to predict the flood risk probability</p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form id="prediction-form">
+                    <div class="form-group">
+                        <label for="Rainfall">Rainfall (mm):</label>
+                        <input type="number" class="form-control" id="Rainfall" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Min_Temp">Min Temperature (°C):</label>
+                        <input type="number" class="form-control" id="Min_Temp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Max_Temp">Max Temperature (°C):</label>
+                        <input type="number" class="form-control" id="Max_Temp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Elevation">Elevation (m):</label>
+                        <input type="number" class="form-control" id="Elevation" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="District">District:</label>
+                        <select class="form-control" id="District" required>
+                            <option value="">Select District</option>
+                            <option value="Colombo">Colombo</option>
+                            <option value="Galle">Galle</option>
+                            <option value="Kandy">Kandy</option>
+                            <option value="Matara">Matara</option>
+                            <option value="Ratnapura">Ratnapura</option>
+                            <option value="Gampaha">Gampaha</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="City">City:</label>
+                        <select class="form-control" id="City" required>
+                            <option value="">Select City</option>
+                            <option value="Colombo">Colombo</option>
+                            <option value="Nugegoda">Nugegoda</option>
+                            <option value="Dehiwala">Dehiwala</option>
+                            <option value="Galle">Galle</option>
+                            <option value="Hikkaduwa">Hikkaduwa</option>
+                            <option value="Unawatuna">Unawatuna</option>
+                            <option value="Kandy">Kandy</option>
+                            <option value="Peradeniya">Peradeniya</option>
+                            <option value="Katugastota">Katugastota</option>
+                            <option value="Matara">Matara</option>
+                            <option value="Weligama">Weligama</option>
+                            <option value="Dickwella">Dickwella</option>
+                            <option value="Ratnapura">Ratnapura</option>
+                            <option value="Pelmadulla">Pelmadulla</option>
+                            <option value="Balangoda">Balangoda</option>
+                            <option value="Gampaha">Gampaha</option>
+                            <option value="Negombo">Negombo</option>
+                            <option value="Ja-Ela">Ja-Ela</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Predict Flood Risk</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="result" class="mt-4" style="display:none;">
+            <h4 class="text-center">Flood Risk Prediction Result</h4>
+            <p class="text-center" id="prediction-result"></p>
+            <p class="text-center" id="flood-risk-status"></p>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $("#prediction-form").on("submit", function(e) {
+                e.preventDefault();
+
+                var data = {
+                    'Rainfall_(mm)': $("#Rainfall").val(),
+                    'Min_Temp': $("#Min_Temp").val(),
+                    'Max_Temp': $("#Max_Temp").val(),
+                    'Elevation_(m)': $("#Elevation").val()
+                };
+
+                $.ajax({
+                    url: 'http://127.0.0.1:5000/predict',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        $("#result").show();
+                        $("#prediction-result").text('Predicted Flood Risk Probability: ' + response.predicted_flood_risk_probability);
+                        $("#flood-risk-status").text('Flood Risk Status: ' + response.flood_risk_status);
+                    },
+                    error: function(error) {
+                        $("#result").show();
+                        $("#prediction-result").text('Error: ' + error.responseJSON.error);
+                        $("#flood-risk-status").text('');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
