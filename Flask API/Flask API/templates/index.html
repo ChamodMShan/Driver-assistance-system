@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accident Audio Classification</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 2em;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: #4CAF50;
+            margin-bottom: 1em;
+        }
+
+        input[type="file"] {
+            background-color: #f9f9f9;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            width: 100%;
+            border: 1px solid #ddd;
+            transition: 0.3s;
+        }
+
+        input[type="file"]:hover {
+            border-color: #4CAF50;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        .audio-player {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .audio-player audio {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .error {
+            color: #ff4d4d;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Audio Classification</h1>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="audio_file" accept=".wav" required>
+            <br>
+            <button type="submit">Upload and Predict</button>
+        </form>
+
+        <!-- Audio Player -->
+        <div class="audio-player" id="audioPlayer" style="display: none;">
+            <audio id="audioPreview" controls>
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <!-- Result Section -->
+        <div class="result" id="result"></div>
+
+        <!-- Error Message -->
+        <div class="error" id="errorMessage"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('uploadForm');
+        const resultDiv = document.getElementById('result');
+        const errorMessage = document.getElementById('errorMessage');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioPreview = document.getElementById('audioPreview');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            resultDiv.textContent = ''; // Clear previous results
+            errorMessage.textContent = ''; // Clear previous error messages
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    resultDiv.textContent = ''; // Clear previous results
+                    errorMessage.textContent = `Error: ${data.error}`;
+                    audioPlayer.style.display = 'none'; // Hide audio player on error
+                } else {
+                    errorMessage.textContent = ''; // Clear previous error
+                    resultDiv.textContent = `Predicted Class: ${data.predicted_class}`;
+
+                    // Display audio player
+                    const file = formData.get('audio_file');
+                    const audioURL = URL.createObjectURL(file);
+                    audioPreview.src = audioURL;
+                    audioPlayer.style.display = 'flex';
+                }
+            } catch (error) {
+                resultDiv.textContent = ''; // Clear previous results
+                errorMessage.textContent = `Error: ${error.message}`;
+                audioPlayer.style.display = 'none'; // Hide audio player on error
+            }
+        });
+    </script>
+</body>
+</html>
