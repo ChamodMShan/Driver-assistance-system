@@ -20,6 +20,8 @@ Figma Link - https://www.figma.com/design/TGNN47vU8WLihnkR9b8Og6/Research-Projec
 
 ## Sample UI
 ![image](https://github.com/user-attachments/assets/3a57b2e5-9f94-4702-8c99-5c42b080e9d5)
+![image](https://github.com/user-attachments/assets/8a189dee-9876-4c6b-9b8e-06d709b278ce)
+
 
 
 ## Get started
@@ -35,4 +37,19 @@ Figma Link - https://www.figma.com/design/TGNN47vU8WLihnkR9b8Og6/Research-Projec
    ```bash
     npx expo start
    ```
+
+## Web
+
+1. Get started
+
+   ```bash
+   npm install
+   ```
+
+2. Start the app
+
+   ```bash
+    npm start
+   ```
+
 
