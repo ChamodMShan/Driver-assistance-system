@@ -18,6 +18,10 @@ It also offers advanced driver assistance features, including road sign recognit
 
 Figma Link - https://www.figma.com/design/TGNN47vU8WLihnkR9b8Og6/Research-Project?node-id=9-298&t=CBoUYIAvBcDHtaW9-1
 
+## Sample UI
+![image](https://github.com/user-attachments/assets/3a57b2e5-9f94-4702-8c99-5c42b080e9d5)
+
+
 ## Get started
 
 1. Install dependencies
